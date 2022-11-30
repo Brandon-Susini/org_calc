@@ -1,0 +1,227 @@
+/* fn build_ui() -> impl Widget<()> {
+    Flex::row()
+        .with_flex_child(
+            Flex::column()
+                .with_flex_child(Label::new("top left"),1.0)
+                .with_flex_child(Label::new("bottom left"),1.0),
+            1.0)
+            .with_flex_child(
+                Flex::column()
+                    .with_flex_child(Label::new("top right"),1.0)
+                    .with_flex_child(Label::new("bottom right"),1.0),
+                1.0
+            )
+        
+    //Label::new("Hello world")
+} */
+//hello.rs
+// Copyright 2019 The Druid Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+//! This is a very small example of how to setup a druid application.
+//! It does the almost bare minimum while still being useful.
+
+// On Windows platform, don't show a console when opening the app.
+#![windows_subsystem = "windows"]
+
+use druid::widget::prelude::*;
+use druid::widget::{Flex, Label, TextBox, Button, Painter};
+use druid::{AppLauncher, Data, Lens, UnitPoint, WidgetExt, WindowDesc,
+            Env, PaintCtx,Rect,RenderContext};
+
+const VERTICAL_WIDGET_SPACING: f64 = 20.0;
+const TEXT_BOX_WIDTH: f64 = 200.0;
+
+/*
+0  0  0  0
+8  4  2  1
+
+0 0 0 1 = 1
+
+Reversed 
+
+1 0 0 0 = 1
+
+For x in 0 ..4{
+    If x == 1{
+        Value at that index = 2 ^ x
+    }else{
+        Value at that index = 0
+    }
+}
+
+Loop 1:
+2 ^ 0 = 1
+Loop 2:
+0
+Loop3:
+0
+Loop4:
+0
+value = 1
+
+
+
+0101 = 5
+reversed
+1010
+Loop 1:
+value = 1
+Loop 2:
+value = 0
+Loop 3:
+value = 2^2 = 4
+Loop 4:
+0
+Total = 5 
+*/
+#[derive(Clone, Data, Lens)]
+struct BinaryData {
+    binary_string: String,
+    stripped_string: String,
+}
+impl BinaryData{
+    fn new(input:String)->BinaryData{
+        let mut b = BinaryData{binary_string:input,stripped_string:"".to_string()};
+        b.strip_string();
+        b
+    }
+    fn strip_string(&mut self){
+        let temp = self.binary_string.clone();
+        self.stripped_string = temp.split_whitespace().fold("".to_string(),|mut acc,x| {acc.push_str(x); acc});
+    }
+    fn convert_to_decimal(&self) -> i32{
+        const BASE:u32 = 10;
+        let mut total:i32 = 0;
+        let reversed = self.binary_string.clone();
+        let rev_iter = reversed.chars().rev();
+        for (i,x) in rev_iter.enumerate(){
+            let x = x.to_digit(BASE).unwrap();
+            if x == 1{
+                total += 2i32.checked_pow(i.try_into().unwrap()).unwrap();
+            }
+        }
+        return total;
+    }
+    fn show_as_hex(&self) -> String{
+        let value = self.convert_to_decimal();
+        format!("{value:#x}")
+    }
+}
+
+pub fn main() {
+    // describe the main window
+    let main_window = WindowDesc::new(build_root_widget())
+        .title("Interactive Binary Calculator")
+        .window_size((400.0, 400.0));
+
+    // create the initial app state
+    /*
+    let initial_state: BinaryData = BinaryData {
+        binary_string: "0001".into(),
+    };
+    */
+    let initial_state: BinaryData = BinaryData::new("1".to_string());
+
+    // start the application. Here we pass in the application state.
+    AppLauncher::with_window(main_window)
+        .log_to_console()
+        .launch(initial_state)
+        .expect("Failed to launch application");
+}
+
+fn build_root_widget() -> impl Widget<BinaryData> {
+    // a label that will determine its text based on the current app data.
+    let decimal_label_value = Label::new(|data: &BinaryData, _env: &Env| {
+        if data.binary_string.is_empty() {
+            "Enter a binary number".to_string()
+        } else {
+            format!("Base 10: {}", data.convert_to_decimal())
+        }
+    })
+    .with_text_size(32.0);
+    let decimal_label = Label::new(|data: &BinaryData, _env: &Env|{
+        format!{"Base 16: "}
+    })
+
+    let hex_label = Label::new(|data: &BinaryData, _env: &Env|{
+        if data.binary_string.is_empty(){
+            "".to_string()
+        }else{
+            format!("Base 16: {}",data.show_as_hex())
+        }
+    })
+    .with_text_size(32.0);
+
+    let hex_label = Label::new(|data: &BinaryData, _env: &Env|{
+        format!{"Base 16: "}
+    })
+
+    // a textbox that modifies `name`.
+    let textbox = TextBox::new()
+        .with_placeholder("Binary number here!")
+        .with_text_size(18.0)
+        .fix_width(TEXT_BOX_WIDTH)
+        .lens(BinaryData::binary_string);
+
+    //let button = Button::new("hello world")
+    //   .fix_width(TEXT_BOX_WIDTH);
+    //let my_rect = Rect::new(0.0,0.0,100.0,100.0);
+    /*
+    let my_painter = Painter::new(|ctx, data: &HelloState,env|{
+        let bounds = Rect::new(0.0,0.0,100.0,100.0);
+        println!("{:?}",ctx.size());
+        ctx.fill(bounds,&env.get(druid::theme::PRIMARY_DARK));
+    });
+    */
+    // arrange the two widgets vertically, with some padding
+    Flex::column()
+        .with_child(
+            Flex::row()
+            .with_child(hex_label)
+            .with_child(hex_label_value)
+        )
+        
+        .with_child(decimal_label)
+        .with_spacer(VERTICAL_WIDGET_SPACING)
+        .with_child(textbox)
+        .align_vertical(UnitPoint::CENTER)
+    //|             |
+    //  whitespace
+    //  hex
+    //  decimal
+    //  whitespace
+    //  textbox
+//  new-------------------
+    //|             |
+    //  whitespace
+    //  hex:label, hex value
+    //  decimal:label, decimal value
+    //  whitespace
+    //  textbox
+        
+}
+
+
+
+
+
+
+fn main() {
+    let input = "010001 10000 00010 10000 01100 000001".to_string();
+    let input = input.split_whitespace();
+    for str in input{
+        print!("{}",str);
+    }
+}
