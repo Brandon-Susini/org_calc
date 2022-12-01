@@ -27,13 +27,17 @@
 //! It does the almost bare minimum while still being useful.
 
 // On Windows platform, don't show a console when opening the app.
-#![windows_subsystem = "windows"]
-extern crate clipboard_win;
+//#![windows_subsystem = "windows"]
+//extern crate clipboard_win;
+//use clipboard_win::Clipboard;
+extern crate clipboard;
+use clipboard::ClipboardProvider;
+use clipboard::ClipboardContext;
 use druid::widget::prelude::*;
 use druid::widget::{Flex, FlexParams,Label, TextBox, Button, Painter};
 use druid::{AppLauncher, Data, Lens, UnitPoint, WidgetExt, WindowDesc,
             Env, PaintCtx,Rect,RenderContext,Color};
-use clipboard_win::Clipboard;
+
 
 const VERTICAL_WIDGET_SPACING: f64 = 20.0;
 const TEXT_BOX_WIDTH: f64 = 200.0;
@@ -119,7 +123,9 @@ fn build_root_widget() -> impl Widget<BinaryData> {
     //a reference to our BinaryData struct
     .on_click(|_,data: &mut BinaryData,_|{
         //Copy the the given value onto the clipboard (for windows)
-        Clipboard::new().unwrap().set_string(&data.show_as_hex());
+        //Clipboard::new().unwrap().set_string(&data.show_as_hex());
+        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+        ctx.set_contents(data.show_as_hex()).unwrap();
     })
     .padding((10.0,0.0))
     .align_horizontal(UnitPoint::RIGHT);;
@@ -151,7 +157,9 @@ fn build_root_widget() -> impl Widget<BinaryData> {
     .with_text_size(32.0)
     .on_click(|_,data: &mut BinaryData,_|{
         //Copy the the given value onto the clipboard (for windows)
-        Clipboard::new().unwrap().set_string(&data.convert_to_decimal().unwrap().to_string());
+        //Clipboard::new().unwrap().set_string(&data.convert_to_decimal().unwrap().to_string());
+        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+        ctx.set_contents(data.convert_to_decimal().unwrap().to_string()).unwrap();
     })
     .padding((10.0,0.0))
     .align_horizontal(UnitPoint::RIGHT);
@@ -184,14 +192,18 @@ fn build_root_widget() -> impl Widget<BinaryData> {
     let save_stripped = Button::from_label(Label::new("Stripped: XXXX").with_text_size(18.0))
         .fix_width(TEXT_BOX_WIDTH)
         .on_click(|_,data: &mut BinaryData,_|{
-            Clipboard::new().unwrap().set_string(&data.get_stripped_string());
+            //Clipboard::new().unwrap().set_string(&data.get_stripped_string());
+            let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+            ctx.set_contents(data.get_stripped_string()).unwrap();
             string_copied();
         })
        .fix_height(40.0);
     let save_spaced = Button::from_label(Label::new("Spaced: X-X-X-X").with_text_size(18.0))
        .fix_width(TEXT_BOX_WIDTH)
        .on_click(|_,data: &mut BinaryData,_|{
-           Clipboard::new().unwrap().set_string(&data.binary_string);
+           //Clipboard::new().unwrap().set_string(&data.binary_string);
+           let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+           ctx.set_contents(data.binary_string.clone()).unwrap();
            string_copied();
        })
       .fix_height(40.0);

@@ -1,0 +1,10 @@
+/Users/brandon/Documents/Code/Rust/org_calc/target/debug/deps/fluent_langneg-0c359b1dcdac23f0.rmeta: /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/lib.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/accepted_languages.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/mod.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/likely_subtags.rs
+
+/Users/brandon/Documents/Code/Rust/org_calc/target/debug/deps/libfluent_langneg-0c359b1dcdac23f0.rlib: /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/lib.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/accepted_languages.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/mod.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/likely_subtags.rs
+
+/Users/brandon/Documents/Code/Rust/org_calc/target/debug/deps/fluent_langneg-0c359b1dcdac23f0.d: /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/lib.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/accepted_languages.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/mod.rs /Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/likely_subtags.rs
+
+/Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/lib.rs:
+/Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/accepted_languages.rs:
+/Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/mod.rs:
+/Users/brandon/.cargo/registry/src/github.com-1ecc6299db9ec823/fluent-langneg-0.13.0/src/negotiate/likely_subtags.rs:
